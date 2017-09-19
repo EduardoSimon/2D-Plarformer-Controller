@@ -4,22 +4,25 @@ using UnityEngine;
 
 public class PhysicsEntity : MonoBehaviour {
 
+#region PUBLIC VARIABLES
     public float gravityModifier = 1.0f;
 	public float minGroundNormalY = .65f;
+    #endregion
 
-	protected Vector2 _targetVelocity;
-    protected Rigidbody2D _rigidbody;
+#region PROTECTED AND PRIVATE VARIABLES
+    protected Vector2 _targetVelocity;
+    protected Vector2 _groundNormal;
     protected Vector2 _velocity;
     protected Vector2 _deltaPosition;
     protected ContactFilter2D _contactFilter;
     protected RaycastHit2D[] _hitBuffer;
     protected List<RaycastHit2D> _hitBufferList;
-	protected bool _isGrounded;
-	protected bool _yMovement;
-	protected Vector2 _groundNormal;
+    protected Rigidbody2D _rigidbody;
 
+    protected bool _isGrounded;
     protected const float _minMoveDistance = 0.001f;
     protected const float _shellRadius = 0.01f;
+#endregion
 
     private void OnEnable()
     {
@@ -34,12 +37,23 @@ public class PhysicsEntity : MonoBehaviour {
 		Gizmos.DrawRay (transform.position, _velocity);
 	}
 
+    private void Update()
+
+    {
+        _targetVelocity = Vector2.zero;
+        ComputeVelocity();
+    }
+
+    protected virtual void ComputeVelocity()
+    {
+
+    }
+
     private void Start()
     {
         _contactFilter.useTriggers = false;
         _contactFilter.SetLayerMask(Physics2D.GetLayerCollisionMask(gameObject.layer));
         _contactFilter.useLayerMask = true;
-		_yMovement = true;
     }
 
     private void FixedUpdate()
@@ -47,15 +61,28 @@ public class PhysicsEntity : MonoBehaviour {
 		_isGrounded = false;
 
         _velocity += gravityModifier * Physics2D.gravity * Time.fixedDeltaTime;
+
+        //velocity coming from the controller
 		_velocity.x = _targetVelocity.x;
 
-		Vector2 moveAlongGround = new Vector2 (_groundNormal.y, -_groundNormal.x);
-
+#region X MOVEMENT
+        //adjust velocity from m/s to m/game seconds and calculate the velocity vector handling the slopes
         _deltaPosition = _velocity * Time.fixedDeltaTime;
-        Vector2 movement = Vector2.up * _deltaPosition.y;
-		movement = 
 
-		Move(movement, _yMovement);
+        Vector2 moveAlongGround = new Vector2 (_groundNormal.y, -_groundNormal.x);
+
+        Vector2 movement = moveAlongGround * _deltaPosition.x;
+
+        Move(movement, false);
+        #endregion
+
+#region Y MOVEMENT
+        //calculate de gravity vector ajusted to the game time
+        movement = Vector2.up * _deltaPosition.y;
+
+		Move(movement, true);
+#endregion
+
     }
 
 	private void Move(Vector2 movement, bool yMovement)
@@ -89,9 +116,6 @@ public class PhysicsEntity : MonoBehaviour {
 				}
 
 				float projection = Vector2.Dot (_velocity, currentNormal);
-
-				Debug.Log (projection.ToString ());
-
 
 				if (projection < 0) {
 					_velocity = _velocity - projection * currentNormal;
