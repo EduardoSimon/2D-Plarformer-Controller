@@ -6,7 +6,7 @@ PlayerSettings:
   serializedVersion: 12
   productGUID: d770b0599bbeade479c350e5e61b555e
   AndroidProfiler: 0
-  defaultScreenOrientation: 4
+  defaultScreenOrientation: 2
   targetDevice: 2
   useOnDemandResources: 0
   accelerometerFrequency: 60
@@ -52,7 +52,7 @@ PlayerSettings:
   m_MobileMTRendering: 0
   m_StackTraceTypes: 010000000100000001000000010000000100000001000000
   iosShowActivityIndicatorOnLoading: -1
-  androidShowActivityIndicatorOnLoading: -1
+  androidShowActivityIndicatorOnLoading: 0
   tizenShowActivityIndicatorOnLoading: -1
   iosAppInBackgroundBehavior: 0
   displayResolutionDialog: 1
@@ -138,9 +138,10 @@ PlayerSettings:
       depthFormat: 1
   protectGraphicsMemory: 0
   useHDRDisplay: 0
-  targetPixelDensity: 0
-  resolutionScalingMode: 0
-  applicationIdentifier: {}
+  targetPixelDensity: 200
+  resolutionScalingMode: 1
+  applicationIdentifier:
+    Android: com.edu.edu
   buildNumber: {}
   AndroidBundleVersionCode: 1
   AndroidMinSdkVersion: 16

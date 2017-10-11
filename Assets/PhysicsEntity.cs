@@ -20,6 +20,7 @@ public class PhysicsEntity : MonoBehaviour {
     protected Rigidbody2D _rigidbody;
 
     protected bool _isGrounded;
+	protected bool _inAir;
     protected const float _minMoveDistance = 0.001f;
     protected const float _shellRadius = 0.01f;
 #endregion
@@ -103,10 +104,13 @@ public class PhysicsEntity : MonoBehaviour {
 			for (int i = 0; i < _hitBufferList.Count; i++) 
 			{
 				Vector2 currentNormal = _hitBufferList [i].normal;
+
 				Debug.DrawLine (currentNormal, currentNormal * 3); 
+
 				if (currentNormal.y > minGroundNormalY)
 				{
 					_isGrounded = true;
+					_inAir = false;
 
 					if (yMovement) 
 					{
@@ -126,6 +130,11 @@ public class PhysicsEntity : MonoBehaviour {
 			}
         }
 
+		if (_inAir) {
+			if (_velocity.y < 0) {
+				_rigidbody.velocity = _velocity;
+			}
+		}
 		_rigidbody.position = _rigidbody.position +  movement.normalized * distance;
     }
 }

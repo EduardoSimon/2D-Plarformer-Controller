@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class PlayerPlatformerController : PhysicsEntity
 {
-    public float jumpSpeed = 7.0f;
-    public float maxSpeed = 5.0f;
-    public float jumpDecreaseRate = 0.1f;
+    public float jumpSpeed;
+    public float maxSpeed;
+    public float jumpDecreaseRate;
 
     private SpriteRenderer _spriteRenderer;
     private Animator _animator;
@@ -40,12 +40,13 @@ public class PlayerPlatformerController : PhysicsEntity
         if (Input.GetButtonDown("Jump") && _isGrounded) 
         {
             _velocity.y = jumpSpeed;
+			_inAir = true;
         }
         else if (Input.GetButtonDown("Jump"))
         {
             if (_velocity.y > 0)
             {
-                 _velocity.y *= jumpDecreaseRate; 
+				_velocity.y *= jumpDecreaseRate; 
             }
         }
 
