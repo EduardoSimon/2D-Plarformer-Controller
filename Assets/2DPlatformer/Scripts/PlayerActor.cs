@@ -18,6 +18,8 @@ public class PlayerActor : MonoBehaviour {
 	private Vector3 m_velocity;
 	private Controller2D m_controller;
 
+	public Vector3 velocity { get { return m_velocity; } }
+
 	// Use this for initialization
 	void Start () {
 		m_controller = GetComponent<Controller2D> ();
